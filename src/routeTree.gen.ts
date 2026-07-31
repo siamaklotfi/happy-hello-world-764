@@ -18,6 +18,7 @@ import { Route as RequestRouteImport } from './routes/request'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedResearcherPanelRouteImport } from './routes/_authenticated/researcher-panel'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
 import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ResearchersIndexRouteImport } from './routes/researchers.index'
@@ -67,6 +68,12 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedResearcherPanelRoute =
+  AuthenticatedResearcherPanelRouteImport.update({
+    id: '/researcher-panel',
+    path: '/researcher-panel',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const BlogIndexRoute = BlogIndexRouteImport.update({
   id: '/blog/',
   path: '/blog/',
@@ -97,6 +104,7 @@ export interface FileRoutesByFullPath {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -111,6 +119,7 @@ export interface FileRoutesByTo {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
   '/blog': typeof BlogIndexRoute
@@ -127,6 +136,7 @@ export interface FileRoutesById {
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
   '/blog/': typeof BlogIndexRoute
@@ -143,6 +153,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/dashboard'
+    | '/researcher-panel'
     | '/blog/$slug'
     | '/researchers/$slug'
     | '/blog/'
@@ -157,6 +168,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/dashboard'
+    | '/researcher-panel'
     | '/blog/$slug'
     | '/researchers/$slug'
     | '/blog'
@@ -172,6 +184,7 @@ export interface FileRouteTypes {
     | '/services'
     | '/sitemap.xml'
     | '/_authenticated/dashboard'
+    | '/_authenticated/researcher-panel'
     | '/blog/$slug'
     | '/researchers/$slug'
     | '/blog/'
@@ -258,6 +271,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/researcher-panel': {
+      id: '/_authenticated/researcher-panel'
+      path: '/researcher-panel'
+      fullPath: '/researcher-panel'
+      preLoaderRoute: typeof AuthenticatedResearcherPanelRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/blog/': {
       id: '/blog/'
       path: '/blog'
@@ -291,10 +311,12 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedResearcherPanelRoute: typeof AuthenticatedResearcherPanelRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedResearcherPanelRoute: AuthenticatedResearcherPanelRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
