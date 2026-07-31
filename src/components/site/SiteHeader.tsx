@@ -1,6 +1,7 @@
 import { Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { Menu, Phone, X } from "lucide-react";
+import { LayoutDashboard, Menu, Phone, X } from "lucide-react";
+import { useSession } from "@/hooks/useSession";
 import { Button } from "@/components/ui/button";
 import { useConsult } from "./ConsultProvider";
 import { Logo } from "./Logo";
@@ -18,6 +19,7 @@ const NAV = [
 export function SiteHeader() {
   const [open, setOpen] = useState(false);
   const consult = useConsult();
+  const { user, homePath } = useSession();
 
   return (
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur">
@@ -52,6 +54,18 @@ export function SiteHeader() {
         </nav>
 
         <div className="flex items-center gap-2">
+          {user ? (
+            <Button size="sm" variant="outline" className="hidden sm:inline-flex" asChild>
+              <Link to={homePath}>
+                <LayoutDashboard className="size-4" />
+                پنل کاربری
+              </Link>
+            </Button>
+          ) : (
+            <Button size="sm" variant="outline" className="hidden sm:inline-flex" asChild>
+              <Link to="/auth">ورود / ثبت‌نام</Link>
+            </Button>
+          )}
           <Button size="sm" className="hidden sm:inline-flex" onClick={consult.open}>
             مشاوره رایگان
           </Button>
@@ -78,6 +92,13 @@ export function SiteHeader() {
                 {item.label}
               </Link>
             ))}
+            <Link
+              to={user ? homePath : "/auth"}
+              onClick={() => setOpen(false)}
+              className="rounded-lg px-3 py-2.5 text-sm font-bold text-primary hover:bg-secondary"
+            >
+              {user ? "پنل کاربری" : "ورود / ثبت‌نام"}
+            </Link>
           </div>
         </nav>
       )}
