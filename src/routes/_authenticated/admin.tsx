@@ -28,6 +28,9 @@ function AdminPanel() {
   const [researchers, setResearchers] = useState<any[]>([]);
   const [requests, setRequests] = useState<any[]>([]);
   const [payments, setPayments] = useState<any[]>([]);
+  const [openRow, setOpenRow] = useState<string | null>(null);
+  const toggleRow = (id: string) => setOpenRow((c) => (c === id ? null : id));
+
 
   const load = useCallback(async () => {
     const uid = (await supabase.auth.getUser()).data.user?.id;
