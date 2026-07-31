@@ -1,4 +1,5 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { supabase } from "@/integrations/supabase/client";
 import { useState } from "react";
 import { CheckCircle2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -47,10 +48,11 @@ function RequestPage() {
   const [form, setForm] = useState(EMPTY);
   const [error, setError] = useState("");
   const [result, setResult] = useState<EstimateResult | null>(null);
+  const [saved, setSaved] = useState<"guest" | "saved" | "error" | "">("");
 
   const set = (k: keyof typeof EMPTY, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.level || !form.field || !form.service || !form.urgency || !form.complexity) {
       setError("لطفاً مقطع، رشته، خدمت، فوریت و سطح پیچیدگی را انتخاب کنید.");
@@ -61,16 +63,41 @@ function RequestPage() {
       return;
     }
     setError("");
-    setResult(
-      estimatePrice({
-        level: form.level,
-        fieldSlug: form.field,
-        serviceSlug: form.service,
-        urgency: form.urgency,
-        complexity: form.complexity,
-      }),
-    );
+    const estimate = estimatePrice({
+      level: form.level,
+      fieldSlug: form.field,
+      serviceSlug: form.service,
+      urgency: form.urgency,
+      complexity: form.complexity,
+    });
+    setResult(estimate);
+
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData.user?.id;
+    if (!uid) {
+      setSaved("guest");
+      return;
+    }
+    const { error: err } = await supabase.from("thesis_requests").insert({
+      student_id: uid,
+      academic_level: form.level,
+      university: form.university,
+      field_slug: form.field,
+      major: form.major,
+      topic: form.topic.trim(),
+      research_method: form.method,
+      service_slug: form.service,
+      deadline: form.deadline || null,
+      urgency: form.urgency,
+      complexity: form.complexity,
+      budget: form.budget,
+      description: form.description,
+      estimate_min: estimate.min,
+      estimate_max: estimate.max,
+    });
+    setSaved(err ? "error" : "saved");
   };
+
 
   const suggested = RESEARCHERS.filter((r) => !form.field || r.fieldSlug === form.field)
     .sort((a, b) => b.rating * b.projects - a.rating * a.projects)
@@ -179,6 +206,21 @@ function RequestPage() {
               <p className="mt-3 text-xs leading-6 text-muted-foreground">
                 این بازه تخمینی است؛ قیمت نهایی پس از دریافت پیشنهاد پژوهشگران و توافق بر مراحل کار مشخص می‌شود.
               </p>
+              {saved === "saved" && (
+                <p className="mt-4 rounded-lg bg-secondary p-3 text-xs leading-6">
+                  درخواست در حساب شما ذخیره شد. پیشنهادهای پژوهشگران را در{" "}
+                  <Link to="/dashboard" className="font-bold text-primary">پنل دانشجو</Link> دنبال کنید.
+                </p>
+              )}
+              {saved === "guest" && (
+                <p className="mt-4 rounded-lg bg-secondary p-3 text-xs leading-6">
+                  برای ذخیره درخواست و دریافت پیشنهاد پژوهشگران،{" "}
+                  <Link to="/auth" className="font-bold text-primary">وارد حساب کاربری شوید</Link>.
+                </p>
+              )}
+              {saved === "error" && (
+                <p className="mt-4 rounded-lg bg-destructive/10 p-3 text-xs text-destructive">ذخیره درخواست انجام نشد؛ دوباره تلاش کنید.</p>
+              )}
             </div>
           ) : (
             <div className="rounded-2xl border border-dashed border-border p-6 text-sm leading-7 text-muted-foreground">

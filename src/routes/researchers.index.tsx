@@ -6,9 +6,11 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FIELDS, LEVELS, RESEARCHERS, toFa } from "@/lib/data";
+import { FIELDS, LEVELS, RESEARCHERS, toFa, type Researcher } from "@/lib/data";
+import { listApprovedResearchers } from "@/lib/researchers.functions";
 
 export const Route = createFileRoute("/researchers/")({
+  loader: () => listApprovedResearchers(),
   component: ResearchersPage,
   head: () => ({
     meta: [
@@ -27,6 +29,7 @@ export const Route = createFileRoute("/researchers/")({
 });
 
 function ResearchersPage() {
+  const fromDb = Route.useLoaderData();
   const [q, setQ] = useState("");
   const [field, setField] = useState("all");
   const [degree, setDegree] = useState("all");
@@ -34,9 +37,14 @@ function ResearchersPage() {
   const [minRating, setMinRating] = useState([0]);
   const [maxPrice, setMaxPrice] = useState([1_500_000]);
 
+  const all = useMemo(() => {
+    const slugs = new Set(RESEARCHERS.map((r) => r.slug));
+    return [...RESEARCHERS, ...(fromDb as Researcher[]).filter((r) => !slugs.has(r.slug))];
+  }, [fromDb]);
+
   const results = useMemo(
     () =>
-      RESEARCHERS.filter((r) => {
+      all.filter((r) => {
         const text = `${r.name} ${r.major} ${r.specialties.join(" ")}`;
         return (
           (q.trim() === "" || text.includes(q.trim())) &&
@@ -47,7 +55,7 @@ function ResearchersPage() {
           r.hourlyPrice <= (maxPrice[0] ?? Infinity)
         );
       }),
-    [q, field, degree, minExp, minRating, maxPrice],
+    [all, q, field, degree, minExp, minRating, maxPrice],
   );
 
   const reset = () => {
