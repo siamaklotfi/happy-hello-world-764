@@ -102,14 +102,14 @@ function ProfilePage() {
           <section className="rounded-2xl border border-border bg-card p-6">
             <h2 className="text-lg font-bold">انتشارات علمی</h2>
             <ul className="mt-4 space-y-3 text-sm leading-7 text-muted-foreground">
-              {r.publications.map((p) => <li key={p} className="border-r-2 border-primary pr-3">{p}</li>)}
+              {r.publications.map((p: string) => <li key={p} className="border-r-2 border-primary pr-3">{p}</li>)}
             </ul>
           </section>
 
           <section className="rounded-2xl border border-border bg-card p-6">
             <h2 className="text-lg font-bold">نمونه‌کارها و پروژه‌های پیشین</h2>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2">
-              {r.portfolio.map((p) => (
+              {r.portfolio.map((p: { title: string; year: number }) => (
                 <li key={p.title} className="rounded-xl bg-secondary p-4 text-sm">
                   <span className="block font-semibold">{p.title}</span>
                   <span className="mt-1 block text-xs text-muted-foreground">سال {toFa(p.year)}</span>
