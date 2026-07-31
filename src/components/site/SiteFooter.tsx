@@ -42,10 +42,10 @@ export function SiteFooter() {
         <div>
           <h3 className="text-sm font-bold">ارتباط با رساله</h3>
           <ul className="mt-4 space-y-2 text-sm text-ink-foreground/70">
-            <li>تلفن: ۰۲۱-۹۱۰۰۱۰۱۰</li>
+            <li>تلفن: ۰۹۳۶۵۹۹۱۰۵۳</li>
             <li>ایمیل: info@resaale.ir</li>
             <li>نشانی: تهران، خیابان کارگر شمالی</li>
-            <li>wr.resaale.ir</li>
+            <li>www.resaale.ir</li>
           </ul>
         </div>
       </div>

@@ -11,7 +11,7 @@ export const Route = createFileRoute("/contact")({
       {
         name: "description",
         content:
-          "راه‌های ارتباط با تیم رساله: تلفن ۰۲۱-۹۱۰۰۱۰۱۰، ایمیل info@resaale.ir و درخواست مشاوره رایگان پایان‌نامه.",
+          "راه‌های ارتباط با تیم رساله: تلفن ۰۹۳۶۵۹۹۱۰۵۳، ایمیل info@resaale.ir و درخواست مشاوره رایگان پایان‌نامه.",
       },
       { property: "og:title", content: "تماس با رساله" },
       { property: "og:description", content: "پشتیبانی خدمات پژوهشی، ۹ صبح تا ۹ شب." },
@@ -33,7 +33,7 @@ function ContactPage() {
         <ul className="mt-8 space-y-4">
           <li className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
             <Phone className="size-5 shrink-0 text-primary" />
-            <span className="font-semibold">۰۲۱-۹۱۰۰۱۰۱۰</span>
+            <span className="font-semibold">۰۹۳۶۵۹۹۱۰۵۳</span>
           </li>
           <li className="flex items-center gap-3 rounded-xl border border-border bg-card p-4">
             <Mail className="size-5 shrink-0 text-primary" />

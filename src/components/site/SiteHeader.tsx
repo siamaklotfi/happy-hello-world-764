@@ -25,11 +25,11 @@ export function SiteHeader() {
     <header className="sticky top-0 z-40 border-b border-border/70 bg-background/90 backdrop-blur">
       <div className="hidden border-b border-border/60 bg-surface md:block">
         <div className="container-page flex h-9 items-center justify-between text-xs text-muted-foreground">
-          <a href="tel:02191001010" className="inline-flex items-center gap-2 font-semibold text-foreground">
+          <a href="tel:09365991053" className="inline-flex items-center gap-2 font-semibold text-foreground">
             <Phone className="size-3.5 text-primary" />
-            ۰۲۱-۹۱۰۰۱۰۱۰
+            ۰۹۳۶۵۹۹۱۰۵۳
           </a>
-          <span>پاسخگویی ۹ صبح تا ۹ شب • wr.resaale.ir</span>
+          <span>پاسخگویی ۹ صبح تا ۹ شب • www.resaale.ir</span>
         </div>
       </div>
 

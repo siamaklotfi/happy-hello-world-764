@@ -112,10 +112,10 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
           "@context": "https://schema.org",
           "@type": "Organization",
           name: "رساله",
-          url: "https://wr.resaale.ir",
+          url: "https://www.resaale.ir",
           description:
             "بازارگاه خدمات پژوهشی و مشاوره پایان‌نامه با پژوهشگران متخصص",
-          telephone: "+982191001010",
+          telephone: "+989365991053",
         }),
       },
     ],
