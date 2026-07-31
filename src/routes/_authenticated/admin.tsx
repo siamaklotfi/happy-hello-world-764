@@ -248,3 +248,12 @@ function AdminPanel() {
     </PanelShell>
   );
 }
+
+function Detail({ label, value }: { label: string; value?: string | null }) {
+  return (
+    <div className="rounded-xl border border-border bg-card px-3 py-2">
+      <span className="block text-xs text-muted-foreground">{label}</span>
+      <span className="block">{value?.toString().trim() ? value : "—"}</span>
+    </div>
+  );
+}
