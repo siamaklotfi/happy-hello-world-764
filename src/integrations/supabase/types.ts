@@ -14,16 +14,392 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      consultations: {
+        Row: {
+          academic_level: string | null
+          created_at: string
+          description: string | null
+          field_slug: string | null
+          full_name: string
+          id: string
+          mobile: string
+          service_slug: string | null
+          status: string
+        }
+        Insert: {
+          academic_level?: string | null
+          created_at?: string
+          description?: string | null
+          field_slug?: string | null
+          full_name: string
+          id?: string
+          mobile: string
+          service_slug?: string | null
+          status?: string
+        }
+        Update: {
+          academic_level?: string | null
+          created_at?: string
+          description?: string | null
+          field_slug?: string | null
+          full_name?: string
+          id?: string
+          mobile?: string
+          service_slug?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
+      messages: {
+        Row: {
+          body: string
+          created_at: string
+          id: string
+          request_id: string
+          sender_id: string
+        }
+        Insert: {
+          body: string
+          created_at?: string
+          id?: string
+          request_id: string
+          sender_id: string
+        }
+        Update: {
+          body?: string
+          created_at?: string
+          id?: string
+          request_id?: string
+          sender_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "messages_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "thesis_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          invoice_number: string | null
+          milestone: string
+          request_id: string
+          status: string
+          student_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          id?: string
+          invoice_number?: string | null
+          milestone: string
+          request_id: string
+          status?: string
+          student_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          invoice_number?: string | null
+          milestone?: string
+          request_id?: string
+          status?: string
+          student_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "thesis_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          academic_level: string | null
+          avatar_url: string | null
+          created_at: string
+          email: string | null
+          full_name: string
+          id: string
+          major: string | null
+          mobile: string | null
+          university: string | null
+          updated_at: string
+        }
+        Insert: {
+          academic_level?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id: string
+          major?: string | null
+          mobile?: string | null
+          university?: string | null
+          updated_at?: string
+        }
+        Update: {
+          academic_level?: string | null
+          avatar_url?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string
+          id?: string
+          major?: string | null
+          mobile?: string | null
+          university?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      proposals: {
+        Row: {
+          created_at: string
+          delivery_days: number
+          id: string
+          message: string | null
+          price: number
+          request_id: string
+          researcher_id: string
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          delivery_days: number
+          id?: string
+          message?: string | null
+          price: number
+          request_id: string
+          researcher_id: string
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          delivery_days?: number
+          id?: string
+          message?: string | null
+          price?: number
+          request_id?: string
+          researcher_id?: string
+          status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "proposals_request_id_fkey"
+            columns: ["request_id"]
+            isOneToOne: false
+            referencedRelation: "thesis_requests"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      researcher_profiles: {
+        Row: {
+          approved: boolean
+          avatar_url: string | null
+          bio: string | null
+          created_at: string
+          degree: string
+          display_name: string
+          experience_years: number
+          field_slug: string
+          hourly_price: number
+          id: string
+          major: string | null
+          portfolio: string[]
+          project_price_max: number | null
+          project_price_min: number | null
+          projects_count: number
+          publications: string[]
+          rating: number
+          research_interests: string | null
+          reviews_count: number
+          skills: string[]
+          slug: string
+          specialties: string[]
+          university: string | null
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          approved?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          degree?: string
+          display_name: string
+          experience_years?: number
+          field_slug?: string
+          hourly_price?: number
+          id?: string
+          major?: string | null
+          portfolio?: string[]
+          project_price_max?: number | null
+          project_price_min?: number | null
+          projects_count?: number
+          publications?: string[]
+          rating?: number
+          research_interests?: string | null
+          reviews_count?: number
+          skills?: string[]
+          slug: string
+          specialties?: string[]
+          university?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          approved?: boolean
+          avatar_url?: string | null
+          bio?: string | null
+          created_at?: string
+          degree?: string
+          display_name?: string
+          experience_years?: number
+          field_slug?: string
+          hourly_price?: number
+          id?: string
+          major?: string | null
+          portfolio?: string[]
+          project_price_max?: number | null
+          project_price_min?: number | null
+          projects_count?: number
+          publications?: string[]
+          rating?: number
+          research_interests?: string | null
+          reviews_count?: number
+          skills?: string[]
+          slug?: string
+          specialties?: string[]
+          university?: string | null
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      thesis_requests: {
+        Row: {
+          academic_level: string
+          budget: string | null
+          complexity: string
+          created_at: string
+          deadline: string | null
+          description: string | null
+          estimate_max: number | null
+          estimate_min: number | null
+          field_slug: string
+          id: string
+          major: string | null
+          research_method: string | null
+          selected_researcher_id: string | null
+          service_slug: string
+          status: string
+          student_id: string
+          topic: string
+          university: string | null
+          updated_at: string
+          urgency: string
+        }
+        Insert: {
+          academic_level: string
+          budget?: string | null
+          complexity: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          estimate_max?: number | null
+          estimate_min?: number | null
+          field_slug: string
+          id?: string
+          major?: string | null
+          research_method?: string | null
+          selected_researcher_id?: string | null
+          service_slug: string
+          status?: string
+          student_id: string
+          topic: string
+          university?: string | null
+          updated_at?: string
+          urgency: string
+        }
+        Update: {
+          academic_level?: string
+          budget?: string | null
+          complexity?: string
+          created_at?: string
+          deadline?: string | null
+          description?: string | null
+          estimate_max?: number | null
+          estimate_min?: number | null
+          field_slug?: string
+          id?: string
+          major?: string | null
+          research_method?: string | null
+          selected_researcher_id?: string | null
+          service_slug?: string
+          status?: string
+          student_id?: string
+          topic?: string
+          university?: string | null
+          updated_at?: string
+          urgency?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thesis_requests_selected_researcher_id_fkey"
+            columns: ["selected_researcher_id"]
+            isOneToOne: false
+            referencedRelation: "researcher_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "student" | "researcher" | "admin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +526,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["student", "researcher", "admin"],
+    },
   },
 } as const
