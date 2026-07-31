@@ -176,18 +176,48 @@ function AdminPanel() {
         <TabsContent value="projects" className="mt-6 overflow-x-auto rounded-2xl border border-border bg-card">
           <table className="w-full text-right text-sm">
             <thead className="bg-surface text-xs text-muted-foreground">
-              <tr><th className="p-3">موضوع</th><th className="p-3">مقطع</th><th className="p-3">حوزه</th><th className="p-3">وضعیت</th></tr>
+              <tr><th className="p-3">موضوع</th><th className="p-3">مقطع</th><th className="p-3">حوزه</th><th className="p-3">وضعیت</th><th className="p-3" /></tr>
             </thead>
             <tbody>
-              {requests.length === 0 && <tr><td colSpan={4} className="p-6 text-center text-muted-foreground">پروژه‌ای ثبت نشده است.</td></tr>}
+              {requests.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">پروژه‌ای ثبت نشده است.</td></tr>}
               {requests.map((r) => (
-                <tr key={r.id} className="border-t border-border">
-                  <td className="p-3">{r.topic}</td>
-                  <td className="p-3">{r.academic_level}</td>
-                  <td className="p-3">{fieldName(r.field_slug)}</td>
-                  <td className="p-3">{STATUS_FA[r.status] ?? r.status}</td>
-                </tr>
+                <Fragment key={r.id}>
+                  <tr className="border-t border-border">
+                    <td className="p-3">{r.topic}</td>
+                    <td className="p-3">{r.academic_level}</td>
+                    <td className="p-3">{fieldName(r.field_slug)}</td>
+                    <td className="p-3">{STATUS_FA[r.status] ?? r.status}</td>
+                    <td className="p-3">
+                      <Button size="sm" variant="ghost" onClick={() => toggleRow(`req-${r.id}`)}>
+                        {openRow === `req-${r.id}` ? "بستن جزئیات" : "مشاهده شرح"}
+                      </Button>
+                    </td>
+                  </tr>
+                  {openRow === `req-${r.id}` && (
+                    <tr className="border-t border-border bg-surface/60">
+                      <td colSpan={5} className="p-4">
+                        <div className="grid gap-2 text-sm sm:grid-cols-3">
+                          <Detail label="دانشگاه" value={r.university} />
+                          <Detail label="گرایش" value={r.major} />
+                          <Detail label="خدمت" value={r.service_slug} />
+                          <Detail label="روش تحقیق" value={r.research_method} />
+                          <Detail label="فوریت" value={r.urgency} />
+                          <Detail label="پیچیدگی" value={r.complexity} />
+                          <Detail label="بودجه" value={r.budget} />
+                          <Detail label="مهلت" value={r.deadline} />
+                          <Detail
+                            label="برآورد (تومان)"
+                            value={r.estimate_min ? `${toFa(r.estimate_min)} تا ${toFa(r.estimate_max)}` : null}
+                          />
+                        </div>
+                        <p className="mt-3 text-xs text-muted-foreground">شرح دانشجو</p>
+                        <p className="mt-1 whitespace-pre-wrap leading-7">{r.description?.trim() ? r.description : "توضیحی ثبت نشده است."}</p>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
+
             </tbody>
           </table>
         </TabsContent>
