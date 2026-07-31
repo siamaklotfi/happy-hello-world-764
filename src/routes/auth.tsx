@@ -93,7 +93,11 @@ function AuthPage() {
       },
     });
     setBusy(false);
-    if (err) return setError(err.message.includes("already") ? "این ایمیل قبلاً ثبت شده است." : "ثبت‌نام انجام نشد، دوباره تلاش کنید.");
+    if (err) {
+      if (err.message.includes("already")) return setError("این ایمیل قبلاً ثبت شده است.");
+      if (err.message.toLowerCase().includes("weak")) return setError("این رمز عبور ضعیف و لو رفته است؛ رمز پیچیده‌تری انتخاب کنید.");
+      return setError("ثبت‌نام انجام نشد، دوباره تلاش کنید.");
+    }
     if (!data.session) {
       setNotice("ثبت‌نام انجام شد. برای فعال‌سازی حساب، لینک ارسال‌شده به ایمیل خود را باز کنید.");
       return;
