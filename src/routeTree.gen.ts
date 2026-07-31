@@ -17,6 +17,7 @@ import { Route as EstimateRouteImport } from './routes/estimate'
 import { Route as RequestRouteImport } from './routes/request'
 import { Route as ServicesRouteImport } from './routes/services'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedResearcherPanelRouteImport } from './routes/_authenticated/researcher-panel'
 import { Route as BlogIndexRouteImport } from './routes/blog.index'
@@ -63,6 +64,11 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -103,6 +109,7 @@ export interface FileRoutesByFullPath {
   '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -118,6 +125,7 @@ export interface FileRoutesByTo {
   '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -135,6 +143,7 @@ export interface FileRoutesById {
   '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/researcher-panel': typeof AuthenticatedResearcherPanelRoute
   '/blog/$slug': typeof BlogSlugRoute
@@ -152,6 +161,7 @@ export interface FileRouteTypes {
     | '/request'
     | '/services'
     | '/sitemap.xml'
+    | '/admin'
     | '/dashboard'
     | '/researcher-panel'
     | '/blog/$slug'
@@ -167,6 +177,7 @@ export interface FileRouteTypes {
     | '/request'
     | '/services'
     | '/sitemap.xml'
+    | '/admin'
     | '/dashboard'
     | '/researcher-panel'
     | '/blog/$slug'
@@ -183,6 +194,7 @@ export interface FileRouteTypes {
     | '/request'
     | '/services'
     | '/sitemap.xml'
+    | '/_authenticated/admin'
     | '/_authenticated/dashboard'
     | '/_authenticated/researcher-panel'
     | '/blog/$slug'
@@ -264,6 +276,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
@@ -310,11 +329,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedResearcherPanelRoute: typeof AuthenticatedResearcherPanelRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedResearcherPanelRoute: AuthenticatedResearcherPanelRoute,
 }
