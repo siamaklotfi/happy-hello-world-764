@@ -6,7 +6,7 @@ import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { FIELDS, LEVELS, RESEARCHERS, toFa } from "@/lib/data";
+import { FIELDS, LEVELS, RESEARCHERS, toFa, type Researcher } from "@/lib/data";
 import { listApprovedResearchers } from "@/lib/researchers.functions";
 
 export const Route = createFileRoute("/researchers/")({
