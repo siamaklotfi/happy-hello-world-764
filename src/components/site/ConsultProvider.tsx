@@ -6,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FIELDS, LEVELS, SERVICES } from "@/lib/data";
+import { supabase } from "@/integrations/supabase/client";
 import { CheckCircle2, MessageCircleQuestion } from "lucide-react";
 
 type Ctx = { open: () => void };
@@ -25,12 +26,22 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
     description: "",
   });
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (form.name.trim().length < 3) return setError("نام و نام خانوادگی را کامل وارد کنید.");
     if (!/^09\d{9}$/.test(form.mobile.trim())) return setError("شماره موبایل معتبر نیست (مثال: 09121234567).");
     if (!form.level || !form.field || !form.service) return setError("مقطع، رشته و نوع خدمت را انتخاب کنید.");
     setError("");
+    const { error: err } = await supabase.from("consultations").insert({
+      full_name: form.name.trim(),
+      mobile: form.mobile.trim(),
+      academic_level: form.level,
+      field_slug: form.field,
+      service_slug: form.service,
+      description: form.description.trim(),
+    });
+    if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
+    setForm({ name: "", mobile: "", level: "", field: "", service: "", description: "" });
     setSent(true);
   };
 
