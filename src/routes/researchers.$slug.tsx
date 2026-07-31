@@ -2,10 +2,10 @@ import { createFileRoute, notFound, Link } from "@tanstack/react-router";
 import { Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useConsult } from "@/components/site/ConsultProvider";
-import { RESEARCHERS, SERVICES, fieldName, toFa } from "@/lib/data";
+import { RESEARCHERS, SERVICES, fieldName, toFa, type Researcher } from "@/lib/data";
 
 export const Route = createFileRoute("/researchers/$slug")({
-  loader: ({ params }) => {
+  loader: ({ params }): { researcher: Researcher } => {
     const researcher = RESEARCHERS.find((r) => r.slug === params.slug);
     if (!researcher) throw notFound();
     return { researcher };
