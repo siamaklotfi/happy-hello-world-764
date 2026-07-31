@@ -55,7 +55,7 @@ export type EstimateResult = { min: number; max: number };
 const round = (n: number) => Math.round(n / 500_000) * 500_000;
 
 export function estimatePrice(input: EstimateInput): EstimateResult {
-  const base = LEVEL_BASE[input.level] ?? LEVEL_BASE["کارشناسی ارشد"];
+  const base = LEVEL_BASE[input.level] ?? 16_000_000;
   const factor =
     (SERVICE_FACTOR[input.serviceSlug] ?? 0.7) *
     (FIELD_FACTOR[input.fieldSlug] ?? 1) *
