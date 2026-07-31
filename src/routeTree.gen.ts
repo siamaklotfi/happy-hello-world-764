@@ -10,7 +10,13 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ContactRouteImport } from './routes/contact'
+import { Route as EstimateRouteImport } from './routes/estimate'
+import { Route as RequestRouteImport } from './routes/request'
 import { Route as ServicesRouteImport } from './routes/services'
+import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as BlogIndexRouteImport } from './routes/blog.index'
+import { Route as BlogSlugRouteImport } from './routes/blog.$slug'
 import { Route as ResearchersIndexRouteImport } from './routes/researchers.index'
 import { Route as ResearchersSlugRouteImport } from './routes/researchers.$slug'
 
@@ -19,9 +25,39 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ContactRoute = ContactRouteImport.update({
+  id: '/contact',
+  path: '/contact',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const EstimateRoute = EstimateRouteImport.update({
+  id: '/estimate',
+  path: '/estimate',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RequestRoute = RequestRouteImport.update({
+  id: '/request',
+  path: '/request',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ServicesRoute = ServicesRouteImport.update({
   id: '/services',
   path: '/services',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
+  id: '/sitemap.xml',
+  path: '/sitemap.xml',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogIndexRoute = BlogIndexRouteImport.update({
+  id: '/blog/',
+  path: '/blog/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BlogSlugRoute = BlogSlugRouteImport.update({
+  id: '/blog/$slug',
+  path: '/blog/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ResearchersIndexRoute = ResearchersIndexRouteImport.update({
@@ -37,35 +73,90 @@ const ResearchersSlugRoute = ResearchersSlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/estimate': typeof EstimateRoute
+  '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/researchers/': typeof ResearchersIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/estimate': typeof EstimateRoute
+  '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
+  '/blog': typeof BlogIndexRoute
   '/researchers': typeof ResearchersIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/contact': typeof ContactRoute
+  '/estimate': typeof EstimateRoute
+  '/request': typeof RequestRoute
   '/services': typeof ServicesRoute
+  '/sitemap.xml': typeof SitemapDotxmlRoute
+  '/blog/$slug': typeof BlogSlugRoute
   '/researchers/$slug': typeof ResearchersSlugRoute
+  '/blog/': typeof BlogIndexRoute
   '/researchers/': typeof ResearchersIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/services' | '/researchers/$slug' | '/researchers/'
+  fullPaths:
+    | '/'
+    | '/contact'
+    | '/estimate'
+    | '/request'
+    | '/services'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/researchers/$slug'
+    | '/blog/'
+    | '/researchers/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/services' | '/researchers/$slug' | '/researchers'
-  id: '__root__' | '/' | '/services' | '/researchers/$slug' | '/researchers/'
+  to:
+    | '/'
+    | '/contact'
+    | '/estimate'
+    | '/request'
+    | '/services'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/researchers/$slug'
+    | '/blog'
+    | '/researchers'
+  id:
+    | '__root__'
+    | '/'
+    | '/contact'
+    | '/estimate'
+    | '/request'
+    | '/services'
+    | '/sitemap.xml'
+    | '/blog/$slug'
+    | '/researchers/$slug'
+    | '/blog/'
+    | '/researchers/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ContactRoute: typeof ContactRoute
+  EstimateRoute: typeof EstimateRoute
+  RequestRoute: typeof RequestRoute
   ServicesRoute: typeof ServicesRoute
+  SitemapDotxmlRoute: typeof SitemapDotxmlRoute
+  BlogSlugRoute: typeof BlogSlugRoute
   ResearchersSlugRoute: typeof ResearchersSlugRoute
+  BlogIndexRoute: typeof BlogIndexRoute
   ResearchersIndexRoute: typeof ResearchersIndexRoute
 }
 
@@ -78,11 +169,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/contact': {
+      id: '/contact'
+      path: '/contact'
+      fullPath: '/contact'
+      preLoaderRoute: typeof ContactRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/estimate': {
+      id: '/estimate'
+      path: '/estimate'
+      fullPath: '/estimate'
+      preLoaderRoute: typeof EstimateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/request': {
+      id: '/request'
+      path: '/request'
+      fullPath: '/request'
+      preLoaderRoute: typeof RequestRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/services': {
       id: '/services'
       path: '/services'
       fullPath: '/services'
       preLoaderRoute: typeof ServicesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sitemap.xml': {
+      id: '/sitemap.xml'
+      path: '/sitemap.xml'
+      fullPath: '/sitemap.xml'
+      preLoaderRoute: typeof SitemapDotxmlRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/': {
+      id: '/blog/'
+      path: '/blog'
+      fullPath: '/blog/'
+      preLoaderRoute: typeof BlogIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/blog/$slug': {
+      id: '/blog/$slug'
+      path: '/blog/$slug'
+      fullPath: '/blog/$slug'
+      preLoaderRoute: typeof BlogSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/researchers/': {
@@ -104,8 +237,14 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ContactRoute: ContactRoute,
+  EstimateRoute: EstimateRoute,
+  RequestRoute: RequestRoute,
   ServicesRoute: ServicesRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
+  BlogSlugRoute: BlogSlugRoute,
   ResearchersSlugRoute: ResearchersSlugRoute,
+  BlogIndexRoute: BlogIndexRoute,
   ResearchersIndexRoute: ResearchersIndexRoute,
 }
 export const routeTree = rootRouteImport
