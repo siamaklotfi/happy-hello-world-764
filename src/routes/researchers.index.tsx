@@ -39,7 +39,7 @@ function ResearchersPage() {
 
   const all = useMemo(() => {
     const slugs = new Set(RESEARCHERS.map((r) => r.slug));
-    return [...RESEARCHERS, ...fromDb.filter((r) => !slugs.has(r.slug))];
+    return [...RESEARCHERS, ...(fromDb as Researcher[]).filter((r) => !slugs.has(r.slug))];
   }, [fromDb]);
 
   const results = useMemo(
