@@ -108,26 +108,47 @@ function AdminPanel() {
         <TabsContent value="leads" className="mt-6 overflow-x-auto rounded-2xl border border-border bg-card">
           <table className="w-full text-right text-sm">
             <thead className="bg-surface text-xs text-muted-foreground">
-              <tr><th className="p-3">نام</th><th className="p-3">موبایل</th><th className="p-3">رشته</th><th className="p-3">وضعیت</th><th className="p-3" /></tr>
+              <tr><th className="p-3">نام</th><th className="p-3">موبایل</th><th className="p-3">رشته</th><th className="p-3">وضعیت</th><th className="p-3" /><th className="p-3" /></tr>
             </thead>
             <tbody>
-              {leads.length === 0 && <tr><td colSpan={5} className="p-6 text-center text-muted-foreground">موردی ثبت نشده است.</td></tr>}
+              {leads.length === 0 && <tr><td colSpan={6} className="p-6 text-center text-muted-foreground">موردی ثبت نشده است.</td></tr>}
               {leads.map((l) => (
-                <tr key={l.id} className="border-t border-border">
-                  <td className="p-3">{l.full_name}</td>
-                  <td className="p-3" dir="ltr">{l.mobile}</td>
-                  <td className="p-3">{l.field_slug ? fieldName(l.field_slug) : "—"}</td>
-                  <td className="p-3">{STATUS_FA[l.status] ?? l.status}</td>
-                  <td className="p-3">
-                    <Button size="sm" variant="outline" onClick={() => setLeadStatus(l.id, l.status === "new" ? "contacted" : "closed")}>
-                      {l.status === "new" ? "پیگیری شد" : "بستن"}
-                    </Button>
-                  </td>
-                </tr>
+                <Fragment key={l.id}>
+                  <tr className="border-t border-border">
+                    <td className="p-3">{l.full_name}</td>
+                    <td className="p-3" dir="ltr">{l.mobile}</td>
+                    <td className="p-3">{l.field_slug ? fieldName(l.field_slug) : "—"}</td>
+                    <td className="p-3">{STATUS_FA[l.status] ?? l.status}</td>
+                    <td className="p-3">
+                      <Button size="sm" variant="ghost" onClick={() => toggleRow(`lead-${l.id}`)}>
+                        {openRow === `lead-${l.id}` ? "بستن جزئیات" : "مشاهده شرح"}
+                      </Button>
+                    </td>
+                    <td className="p-3">
+                      <Button size="sm" variant="outline" onClick={() => setLeadStatus(l.id, l.status === "new" ? "contacted" : "closed")}>
+                        {l.status === "new" ? "پیگیری شد" : "بستن"}
+                      </Button>
+                    </td>
+                  </tr>
+                  {openRow === `lead-${l.id}` && (
+                    <tr className="border-t border-border bg-surface/60">
+                      <td colSpan={6} className="p-4">
+                        <div className="grid gap-2 text-sm sm:grid-cols-3">
+                          <Detail label="مقطع تحصیلی" value={l.academic_level} />
+                          <Detail label="خدمت درخواستی" value={l.service_slug} />
+                          <Detail label="تاریخ ثبت" value={new Date(l.created_at).toLocaleDateString("fa-IR")} />
+                        </div>
+                        <p className="mt-3 text-xs text-muted-foreground">شرح مشتری</p>
+                        <p className="mt-1 whitespace-pre-wrap leading-7">{l.description?.trim() ? l.description : "توضیحی ثبت نشده است."}</p>
+                      </td>
+                    </tr>
+                  )}
+                </Fragment>
               ))}
             </tbody>
           </table>
         </TabsContent>
+
 
         <TabsContent value="researchers" className="mt-6 overflow-x-auto rounded-2xl border border-border bg-card">
           <table className="w-full text-right text-sm">
