@@ -50,7 +50,7 @@ function RequestPage() {
 
   const set = (k: keyof typeof EMPTY, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
-  const submit = (e: React.FormEvent) => {
+  const submit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.level || !form.field || !form.service || !form.urgency || !form.complexity) {
       setError("لطفاً مقطع، رشته، خدمت، فوریت و سطح پیچیدگی را انتخاب کنید.");
@@ -61,16 +61,41 @@ function RequestPage() {
       return;
     }
     setError("");
-    setResult(
-      estimatePrice({
-        level: form.level,
-        fieldSlug: form.field,
-        serviceSlug: form.service,
-        urgency: form.urgency,
-        complexity: form.complexity,
-      }),
-    );
+    const estimate = estimatePrice({
+      level: form.level,
+      fieldSlug: form.field,
+      serviceSlug: form.service,
+      urgency: form.urgency,
+      complexity: form.complexity,
+    });
+    setResult(estimate);
+
+    const { data: userData } = await supabase.auth.getUser();
+    const uid = userData.user?.id;
+    if (!uid) {
+      setSaved("guest");
+      return;
+    }
+    const { error: err } = await supabase.from("thesis_requests").insert({
+      student_id: uid,
+      academic_level: form.level,
+      university: form.university,
+      field_slug: form.field,
+      major: form.major,
+      topic: form.topic.trim(),
+      research_method: form.method,
+      service_slug: form.service,
+      deadline: form.deadline || null,
+      urgency: form.urgency,
+      complexity: form.complexity,
+      budget: form.budget,
+      description: form.description,
+      estimate_min: estimate.min,
+      estimate_max: estimate.max,
+    });
+    setSaved(err ? "error" : "saved");
   };
+
 
   const suggested = RESEARCHERS.filter((r) => !form.field || r.fieldSlug === form.field)
     .sort((a, b) => b.rating * b.projects - a.rating * a.projects)
