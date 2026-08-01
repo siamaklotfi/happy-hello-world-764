@@ -11,16 +11,14 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     return { kind: data.kind, id: data.id };
   })
   .handler(async ({ data }) => {
-    const lovableKey = process.env["LOVABLE_API_KEY"];
     const telegramKey = process.env["TELEGRAM_API_KEY"];
     const chatId = process.env["TELEGRAM_ADMIN_CHAT_ID"];
-    if (!lovableKey || !telegramKey || !chatId) {
+    if (!telegramKey || !chatId) {
       console.error(
-        `Telegram notify env missing: LOVABLE_API_KEY=${!!lovableKey} TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
+        `Telegram notify env missing: TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
       );
       return { sent: false };
     }
-
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
@@ -63,11 +61,9 @@ export const notifyNewLead = createServerFn({ method: "POST" })
       ].join("\n");
     }
 
-    const res = await fetch("https://connector-gateway.lovable.dev/telegram/sendMessage", {
+    const res = await fetch(`https://api.telegram.org/bot${telegramKey}/sendMessage`, {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${lovableKey}`,
-        "X-Connection-Api-Key": telegramKey,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({ chat_id: chatId, text, parse_mode: "HTML" }),
