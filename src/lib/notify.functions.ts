@@ -74,8 +74,9 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     });
 
     if (!res.ok) {
-      console.error(`Telegram notify failed [${res.status}]: ${await res.text()}`);
-      return { sent: false };
+      const body = await res.text();
+      console.error(`Telegram notify failed [${res.status}]: ${body}`);
+      return { sent: false, reason: `gw ${res.status} ${body.slice(0, 200)}` };
     }
     return { sent: true };
   });
