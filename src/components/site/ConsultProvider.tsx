@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FIELDS, LEVELS, SERVICES } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyNewLead } from "@/lib/notify.functions";
+
 import { CheckCircle2, MessageCircleQuestion } from "lucide-react";
 
 type Ctx = { open: () => void };
