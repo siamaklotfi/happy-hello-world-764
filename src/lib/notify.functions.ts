@@ -14,18 +14,27 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     const lovableKey = process.env["LOVABLE_API_KEY"];
     const telegramKey = process.env["TELEGRAM_API_KEY"];
     const chatId = process.env["TELEGRAM_ADMIN_CHAT_ID"];
-    if (!lovableKey || !telegramKey || !chatId) return { sent: false };
+    if (!lovableKey || !telegramKey || !chatId) {
+      console.error(
+        `Telegram notify env missing: LOVABLE_API_KEY=${!!lovableKey} TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
+      );
+      return { sent: false };
+    }
+
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
     let text = "";
     if (data.kind === "consultation") {
-      const { data: row } = await supabaseAdmin
+      const { data: row, error: qErr } = await supabaseAdmin
         .from("consultations")
         .select("full_name, mobile, academic_level, field_slug, service_slug, description")
         .eq("id", data.id)
         .maybeSingle();
-      if (!row) return { sent: false };
+      if (!row) {
+        console.error(`Telegram notify: consultation ${data.id} not found: ${qErr?.message ?? "no row"}`);
+        return { sent: false };
+      }
       text = [
         "🔔 <b>درخواست مشاوره جدید</b>",
         `👤 نام: ${row.full_name}`,
@@ -65,7 +74,8 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     });
 
     if (!res.ok) {
-      console.error(`Telegram notify failed [${res.status}]: ${await res.text()}`);
+      const body = await res.text();
+      console.error(`Telegram notify failed [${res.status}]: ${body}`);
       return { sent: false };
     }
     return { sent: true };
