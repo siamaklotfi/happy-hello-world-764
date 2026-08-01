@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { FIELDS, LEVELS, SERVICES } from "@/lib/data";
 import { supabase } from "@/integrations/supabase/client";
+import { notifyNewLead } from "@/lib/notify.functions";
+
 import { CheckCircle2, MessageCircleQuestion } from "lucide-react";
 
 type Ctx = { open: () => void };
@@ -32,7 +34,9 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
     if (!/^09\d{9}$/.test(form.mobile.trim())) return setError("شماره موبایل معتبر نیست (مثال: 09121234567).");
     if (!form.level || !form.field || !form.service) return setError("مقطع، رشته و نوع خدمت را انتخاب کنید.");
     setError("");
+    const newId = crypto.randomUUID();
     const { error: err } = await supabase.from("consultations").insert({
+      id: newId,
       full_name: form.name.trim(),
       mobile: form.mobile.trim(),
       academic_level: form.level,
@@ -41,6 +45,9 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
       description: form.description.trim(),
     });
     if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
+    void notifyNewLead({ data: { kind: "consultation", id: newId } }).catch(() => {});
+
+
     setForm({ name: "", mobile: "", level: "", field: "", service: "", description: "" });
     setSent(true);
   };
