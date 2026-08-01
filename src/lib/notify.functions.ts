@@ -18,7 +18,7 @@ export const notifyNewLead = createServerFn({ method: "POST" })
       console.error(
         `Telegram notify env missing: LOVABLE_API_KEY=${!!lovableKey} TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
       );
-      return { sent: false, reason: "env" };
+      return { sent: false };
     }
 
 
@@ -33,7 +33,7 @@ export const notifyNewLead = createServerFn({ method: "POST" })
         .maybeSingle();
       if (!row) {
         console.error(`Telegram notify: consultation ${data.id} not found: ${qErr?.message ?? "no row"}`);
-        return { sent: false, reason: "row" };
+        return { sent: false };
       }
       text = [
         "🔔 <b>درخواست مشاوره جدید</b>",
@@ -76,7 +76,7 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     if (!res.ok) {
       const body = await res.text();
       console.error(`Telegram notify failed [${res.status}]: ${body}`);
-      return { sent: false, reason: `gw ${res.status} ${body.slice(0, 200)}` };
+      return { sent: false };
     }
     return { sent: true };
   });
