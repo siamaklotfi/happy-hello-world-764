@@ -14,7 +14,13 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     const lovableKey = process.env["LOVABLE_API_KEY"];
     const telegramKey = process.env["TELEGRAM_API_KEY"];
     const chatId = process.env["TELEGRAM_ADMIN_CHAT_ID"];
-    if (!lovableKey || !telegramKey || !chatId) return { sent: false };
+    if (!lovableKey || !telegramKey || !chatId) {
+      console.error(
+        `Telegram notify env missing: LOVABLE_API_KEY=${!!lovableKey} TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
+      );
+      return { sent: false, reason: "env" };
+    }
+
 
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
