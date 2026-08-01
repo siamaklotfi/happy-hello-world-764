@@ -26,12 +26,15 @@ export const notifyNewLead = createServerFn({ method: "POST" })
 
     let text = "";
     if (data.kind === "consultation") {
-      const { data: row } = await supabaseAdmin
+      const { data: row, error: qErr } = await supabaseAdmin
         .from("consultations")
         .select("full_name, mobile, academic_level, field_slug, service_slug, description")
         .eq("id", data.id)
         .maybeSingle();
-      if (!row) return { sent: false };
+      if (!row) {
+        console.error(`Telegram notify: consultation ${data.id} not found: ${qErr?.message ?? "no row"}`);
+        return { sent: false, reason: "row" };
+      }
       text = [
         "🔔 <b>درخواست مشاوره جدید</b>",
         `👤 نام: ${row.full_name}`,
