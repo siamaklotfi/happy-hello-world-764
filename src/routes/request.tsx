@@ -10,6 +10,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { ResearcherCard } from "@/components/site/ResearcherCard";
 import { FIELDS, LEVELS, RESEARCHERS, SERVICES, toFa } from "@/lib/data";
 import { COMPLEXITY, URGENCY, estimatePrice, type EstimateResult } from "@/lib/pricing";
+import { notifyNewLead } from "@/lib/notify.functions";
+
 
 export const Route = createFileRoute("/request")({
   component: RequestPage,
