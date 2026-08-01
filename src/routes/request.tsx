@@ -78,7 +78,7 @@ function RequestPage() {
       setSaved("guest");
       return;
     }
-    const { error: err } = await supabase.from("thesis_requests").insert({
+    const { data: inserted, error: err } = await supabase.from("thesis_requests").insert({
       student_id: uid,
       academic_level: form.level,
       university: form.university,
@@ -94,8 +94,10 @@ function RequestPage() {
       description: form.description,
       estimate_min: estimate.min,
       estimate_max: estimate.max,
-    });
+    }).select("id").maybeSingle();
+    if (!err && inserted?.id) void notifyNewLead({ data: { kind: "request", id: inserted.id } }).catch(() => {});
     setSaved(err ? "error" : "saved");
+
   };
 
 
