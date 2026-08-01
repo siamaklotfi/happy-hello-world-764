@@ -32,16 +32,19 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
     if (!/^09\d{9}$/.test(form.mobile.trim())) return setError("شماره موبایل معتبر نیست (مثال: 09121234567).");
     if (!form.level || !form.field || !form.service) return setError("مقطع، رشته و نوع خدمت را انتخاب کنید.");
     setError("");
-    const { data: inserted, error: err } = await supabase.from("consultations").insert({
+    const newId = crypto.randomUUID();
+    const { error: err } = await supabase.from("consultations").insert({
+      id: newId,
       full_name: form.name.trim(),
       mobile: form.mobile.trim(),
       academic_level: form.level,
       field_slug: form.field,
       service_slug: form.service,
       description: form.description.trim(),
-    }).select("id").maybeSingle();
+    });
     if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
-    if (inserted?.id) void notifyNewLead({ data: { kind: "consultation", id: inserted.id } }).catch(() => {});
+    void notifyNewLead({ data: { kind: "consultation", id: newId } }).catch(() => {});
+
 
     setForm({ name: "", mobile: "", level: "", field: "", service: "", description: "" });
     setSent(true);
