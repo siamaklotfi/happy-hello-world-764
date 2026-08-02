@@ -97,27 +97,34 @@ function RequestPage() {
       estimate_min: estimate.min,
       estimate_max: estimate.max,
     }).select("id").maybeSingle();
-    if (!err && inserted?.id) {
-      await notifyNewLead({
-        data: {
-          kind: "request",
-          id: inserted.id,
-          lead: {
-            topic: form.topic.trim(),
-            academicLevel: form.level,
-            fieldSlug: form.field,
-            major: form.major,
-            serviceSlug: form.service,
-            urgency: form.urgency,
-            budget: form.budget,
-            description: form.description,
-          },
-        },
-      }).catch((notifyError) => console.error("Telegram request notification failed", notifyError));
-    }
-    setSaved(err ? "error" : "saved");
+   if (err) {
+  console.error("Thesis request insert error:", err);
+  setSaved("error");
+  return;
+}
 
-  };
+if (inserted?.id) {
+  await notifyNewLead({
+    data: {
+      kind: "request",
+      id: inserted.id,
+      lead: {
+        topic: form.topic.trim(),
+        academicLevel: form.level,
+        fieldSlug: form.field,
+        major: form.major,
+        serviceSlug: form.service,
+        urgency: form.urgency,
+        budget: form.budget,
+        description: form.description,
+      },
+    },
+  }).catch((notifyError) =>
+    console.error("Telegram request notification failed", notifyError),
+  );
+}
+
+setSaved("saved");
 
 
   const suggested = RESEARCHERS.filter((r) => !form.field || r.fieldSlug === form.field)
