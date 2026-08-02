@@ -109,11 +109,14 @@ function RequestPage() {
     .select("id")
     .maybeSingle();
 
-  if (err) {
-    console.error("Thesis request insert error:", err);
-    setSaved("error");
-    return;
-  }
+ if (err) {
+  console.error(err);
+
+  alert(JSON.stringify(err, null, 2));
+
+  setSaved("error");
+  return;
+}
 
   if (inserted?.id) {
     await notifyNewLead({
