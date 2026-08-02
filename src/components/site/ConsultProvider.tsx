@@ -45,7 +45,20 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
       description: form.description.trim(),
     });
     if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
-    void notifyNewLead({ data: { kind: "consultation", id: newId } }).catch(() => {});
+    await notifyNewLead({
+      data: {
+        kind: "consultation",
+        id: newId,
+        lead: {
+          fullName: form.name.trim(),
+          mobile: form.mobile.trim(),
+          academicLevel: form.level,
+          fieldSlug: form.field,
+          serviceSlug: form.service,
+          description: form.description.trim(),
+        },
+      },
+    }).catch((notifyError) => console.error("Telegram consultation notification failed", notifyError));
 
 
     setForm({ name: "", mobile: "", level: "", field: "", service: "", description: "" });
