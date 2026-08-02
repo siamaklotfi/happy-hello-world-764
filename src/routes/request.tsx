@@ -136,12 +136,10 @@ function RequestPage() {
     });
   }
 
-  setSaved("saved");
+   setSaved("saved");
 };
-setSaved("saved");
 
-
-  const suggested = RESEARCHERS.filter((r) => !form.field || r.fieldSlug === form.field)
+const suggested = RESEARCHERS.filter((r) => !form.field || r.fieldSlug === form.field)
     .sort((a, b) => b.rating * b.projects - a.rating * a.projects)
     .slice(0, 3);
 
