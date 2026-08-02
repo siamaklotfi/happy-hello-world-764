@@ -87,27 +87,25 @@ function RequestPage() {
     return;
   }
 
-  const { data: inserted, error: err } = await supabase
-    .from("thesis_requests")
-    .insert({
-      student_id: uid,
-      academic_level: form.level,
-      university: form.university,
-      field_slug: form.field,
-      major: form.major,
-      topic: form.topic.trim(),
-      research_method: form.method,
-      service_slug: form.service,
-      deadline: form.deadline || null,
-      urgency: form.urgency,
-      complexity: form.complexity,
-      budget: form.budget,
-      description: form.description,
-      estimate_min: estimate.min,
-      estimate_max: estimate.max,
-    })
-    .select("id")
-    .maybeSingle();
+const { error: err } = await supabase
+  .from("thesis_requests")
+  .insert({
+    student_id: uid,
+    academic_level: form.level,
+    university: form.university,
+    field_slug: form.field,
+    major: form.major,
+    topic: form.topic.trim(),
+    research_method: form.method,
+    service_slug: form.service,
+    deadline: form.deadline || null,
+    urgency: form.urgency,
+    complexity: form.complexity,
+    budget: form.budget,
+    description: form.description,
+    estimate_min: estimate.min,
+    estimate_max: estimate.max,
+  });
 
  if (err) {
   console.error(err);
