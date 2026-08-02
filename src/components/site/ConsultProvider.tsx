@@ -44,7 +44,10 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
       service_slug: form.service,
       description: form.description.trim(),
     });
-    if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
+    if (err) {
+      console.error("consultation insert failed", err);
+      return setError(`ثبت درخواست انجام نشد: ${err.message}`);
+    }
     await notifyNewLead({
       data: {
         kind: "consultation",
