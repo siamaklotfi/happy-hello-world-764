@@ -55,32 +55,41 @@ function RequestPage() {
   const set = (k: keyof typeof EMPTY, v: string) => setForm((f) => ({ ...f, [k]: v }));
 
   const submit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!form.level || !form.field || !form.service || !form.urgency || !form.complexity) {
-      setError("لطفاً مقطع، رشته، خدمت، فوریت و سطح پیچیدگی را انتخاب کنید.");
-      return;
-    }
-    if (form.topic.trim().length < 5) {
-      setError("موضوع پایان‌نامه را دقیق‌تر وارد کنید.");
-      return;
-    }
-    setError("");
-    const estimate = estimatePrice({
-      level: form.level,
-      fieldSlug: form.field,
-      serviceSlug: form.service,
-      urgency: form.urgency,
-      complexity: form.complexity,
-    });
-    setResult(estimate);
+  e.preventDefault();
 
-    const { data: userData } = await supabase.auth.getUser();
-    const uid = userData.user?.id;
-    if (!uid) {
-      setSaved("guest");
-      return;
-    }
-    const { data: inserted, error: err } = await supabase.from("thesis_requests").insert({
+  if (!form.level || !form.field || !form.service || !form.urgency || !form.complexity) {
+    setError("لطفاً مقطع، رشته، خدمت، فوریت و سطح پیچیدگی را انتخاب کنید.");
+    return;
+  }
+
+  if (form.topic.trim().length < 5) {
+    setError("موضوع پایان‌نامه را دقیق‌تر وارد کنید.");
+    return;
+  }
+
+  setError("");
+
+  const estimate = estimatePrice({
+    level: form.level,
+    fieldSlug: form.field,
+    serviceSlug: form.service,
+    urgency: form.urgency,
+    complexity: form.complexity,
+  });
+
+  setResult(estimate);
+
+  const { data: userData } = await supabase.auth.getUser();
+  const uid = userData.user?.id;
+
+  if (!uid) {
+    setSaved("guest");
+    return;
+  }
+
+  const { data: inserted, error: err } = await supabase
+    .from("thesis_requests")
+    .insert({
       student_id: uid,
       academic_level: form.level,
       university: form.university,
@@ -96,34 +105,39 @@ function RequestPage() {
       description: form.description,
       estimate_min: estimate.min,
       estimate_max: estimate.max,
-    }).select("id").maybeSingle();
-   if (err) {
-  console.error("Thesis request insert error:", err);
-  setSaved("error");
-  return;
-}
+    })
+    .select("id")
+    .maybeSingle();
 
-if (inserted?.id) {
-  await notifyNewLead({
-    data: {
-      kind: "request",
-      id: inserted.id,
-      lead: {
-        topic: form.topic.trim(),
-        academicLevel: form.level,
-        fieldSlug: form.field,
-        major: form.major,
-        serviceSlug: form.service,
-        urgency: form.urgency,
-        budget: form.budget,
-        description: form.description,
+  if (err) {
+    console.error("Thesis request insert error:", err);
+    setSaved("error");
+    return;
+  }
+
+  if (inserted?.id) {
+    await notifyNewLead({
+      data: {
+        kind: "request",
+        id: inserted.id,
+        lead: {
+          topic: form.topic.trim(),
+          academicLevel: form.level,
+          fieldSlug: form.field,
+          major: form.major,
+          serviceSlug: form.service,
+          urgency: form.urgency,
+          budget: form.budget,
+          description: form.description,
+        },
       },
-    },
-  }).catch((notifyError) =>
-    console.error("Telegram request notification failed", notifyError),
-  );
-}
+    }).catch((notifyError) => {
+      console.error("Telegram request notification failed", notifyError);
+    });
+  }
 
+  setSaved("saved");
+};
 setSaved("saved");
 
 
