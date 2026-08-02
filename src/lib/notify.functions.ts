@@ -46,15 +46,15 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     return data;
   })
   .handler(async ({ data }) => {
-    const lovableKey = process.env["LOVABLE_API_KEY"];
-    const telegramKey = process.env["TELEGRAM_API_KEY"];
-    const chatId = process.env["TELEGRAM_ADMIN_CHAT_ID"];
-    if (!lovableKey || !telegramKey || !chatId) {
-      console.error(
-        `Telegram notify env missing: LOVABLE_API_KEY=${!!lovableKey} TELEGRAM_API_KEY=${!!telegramKey} TELEGRAM_ADMIN_CHAT_ID=${!!chatId}`,
-      );
-      return { sent: false };
-    }
+    const botToken = process.env.TELEGRAM_BOT_TOKEN;
+    const chatId = process.env.TELEGRAM_CHAT_ID;
+
+if (!botToken || !chatId) {
+  console.error(
+    `Telegram env missing: TELEGRAM_BOT_TOKEN=${!!botToken} TELEGRAM_CHAT_ID=${!!chatId}`,
+  );
+  return { sent: false };
+}
 
     const escapeHtml = (value: string) =>
       value.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
@@ -83,8 +83,29 @@ export const notifyNewLead = createServerFn({ method: "POST" })
     }
     const text = lines.map((line, index) => (index === 0 ? line : escapeHtml(line))).join("\n");
 
-    const res = await fetch("https://connector-gateway.lovable.dev/telegram/sendMessage", {
-      method: "POST",
+const res = await fetch(
+  `https://api.telegram.org/bot${botToken}/sendMessage`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      chat_id: chatId,
+      text,
+      parse_mode: "HTML",
+    }),
+  },
+);
+
+const result = await res.json();
+
+if (!res.ok || !result.ok) {
+  console.error("Telegram API Error:", result);
+  return { sent: false };
+}
+
+return { sent: true };      method: "POST",
       headers: {
         Authorization: `Bearer ${lovableKey}`,
         "X-Connection-Api-Key": telegramKey,
