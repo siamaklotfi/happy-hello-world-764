@@ -35,16 +35,25 @@ export function ConsultProvider({ children }: { children: ReactNode }) {
     if (!form.level || !form.field || !form.service) return setError("مقطع، رشته و نوع خدمت را انتخاب کنید.");
     setError("");
     const newId = crypto.randomUUID();
-    const { error: err } = await supabase.from("consultations").insert({
-      id: newId,
-      full_name: form.name.trim(),
-      mobile: form.mobile.trim(),
-      academic_level: form.level,
-      field_slug: form.field,
-      service_slug: form.service,
-      description: form.description.trim(),
-    });
-    if (err) return setError("ثبت درخواست انجام نشد؛ دوباره تلاش کنید.");
+    let err: { message: string } | null = null;
+    try {
+      const res = await supabase.from("consultations").insert({
+        id: newId,
+        full_name: form.name.trim(),
+        mobile: form.mobile.trim(),
+        academic_level: form.level,
+        field_slug: form.field,
+        service_slug: form.service,
+        description: form.description.trim(),
+      });
+      err = res.error;
+    } catch (thrown) {
+      err = { message: thrown instanceof Error ? thrown.message : String(thrown) };
+    }
+    if (err) {
+      console.error("consultation insert failed", err);
+      return setError(`ثبت درخواست انجام نشد: ${err.message}`);
+    }
     await notifyNewLead({
       data: {
         kind: "consultation",
