@@ -87,7 +87,7 @@ function RequestPage() {
     return;
   }
 
-const { error: err } = await supabase
+const { data: inserted, error: err } = await supabase
   .from("thesis_requests")
   .insert({
     student_id: uid,
@@ -105,7 +105,9 @@ const { error: err } = await supabase
     description: form.description,
     estimate_min: estimate.min,
     estimate_max: estimate.max,
-  });
+  })
+  .select("id")
+  .maybeSingle();
 
  if (err) {
   console.error(err);
