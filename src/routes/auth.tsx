@@ -62,13 +62,32 @@ function AuthPage() {
     e.preventDefault();
     setBusy(true);
     setError("");
-    const { error: err } = await supabase.auth.signInWithPassword({
-      email: signIn.email.trim(),
-      password: signIn.password,
+    const { data, error: err } = await supabase.auth.signInWithPassword({
+  email: signIn.email.trim(),
+  password: signIn.password,
+});
+
+setBusy(false);
+if (err) return setError("ایمیل یا رمز عبور نادرست است.");
+
+const user = data.user;
+
+if (user) {
+  const { data: existingRole } = await supabase
+    .from("user_roles")
+    .select("role")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  if (!existingRole) {
+    await supabase.from("user_roles").insert({
+      user_id: user.id,
+      role: (user.user_metadata.role ?? "student") as "student" | "researcher",
     });
-    setBusy(false);
-    if (err) return setError("ایمیل یا رمز عبور نادرست است.");
-    go();
+  }
+}
+
+go();
   };
 
   const handleSignUp = async (e: React.FormEvent) => {
